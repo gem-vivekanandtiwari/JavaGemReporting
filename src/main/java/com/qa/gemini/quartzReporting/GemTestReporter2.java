@@ -18,7 +18,7 @@ public class GemTestReporter2 {
 	private static ThreadLocal<TestCase_Details> testCase_Details = new ThreadLocal<TestCase_Details>();
 	private static JsonObject stepJson = new JsonObject();
 	private static ThreadLocal<JsonArray> steps = new ThreadLocal<JsonArray>();
-	private static Suits_Details suiteDetails;
+	private static volatile Suits_Details suiteDetails;
 	private static QuartzReporting reporting ;
 
 
@@ -62,9 +62,10 @@ public class GemTestReporter2 {
 
 
 
-	public static void endTestCase() {
+	public synchronized static void endTestCase() {
 		testCase_Details.get().setStatus(steps.get());
 		testCase_Details.get().endTestCase();
+		System.out.println(testCase_Details.get().toString());
 		suiteDetails.addTestCaseDetail(testCase_Details.get());
 
 

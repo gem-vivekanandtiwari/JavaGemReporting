@@ -68,7 +68,7 @@ class Suits_Details {
 				req+=1;
 				break;
 			case "warn" :
-				req+=1;
+				warn+=1;
 				break;
 			default:
 				break;

@@ -13,15 +13,26 @@ public class GemReportingTest2 {
 		for (int i = 0; i < 10; i++) {
 			Thread thread = new Thread() {
 				public void run() {
-					GemTestReporter2.startTestCase("GemTestCase " + new Random().nextInt(), "Test", "GemJavaProject",
-							false);
-					GemTestReporter2.addTestStep("Step1", "stepDescription1", STATUS.PASS);
-					GemTestReporter2.addTestStep("Step2", "stepDescription2", STATUS.PASS);
-					GemTestReporter2.addTestStep("Step3", "stepDescription3", STATUS.FAIL);
-					GemTestReporter2.addTestStep("Step4", "stepDescription4", STATUS.PASS);
-					GemTestReporter2.addTestStep("Step5", "stepDescription5", STATUS.PASS);
-					GemTestReporter2.endTestCase();
-					System.out.println(new Random().nextInt());
+					
+					try {
+						
+						GemTestReporter2.startTestCase("GemTestCase " + new Random().nextInt(), "Test", "GemJavaProject",
+								false);
+						GemTestReporter2.addTestStep("Step1", "stepDescription1", STATUS.PASS);
+						Thread.sleep(new Random().nextInt(5000));
+						GemTestReporter2.addTestStep("Step2", "stepDescription2", STATUS.PASS);
+						Thread.sleep(new Random().nextInt(5000));
+						GemTestReporter2.addTestStep("Step3", "stepDescription3", STATUS.PASS);
+						Thread.sleep(new Random().nextInt(5000));
+						GemTestReporter2.addTestStep("Step4", "stepDescription4", STATUS.PASS);
+						Thread.sleep(new Random().nextInt(5000));
+						GemTestReporter2.addTestStep("Step5", "stepDescription5", STATUS.PASS);
+						Thread.sleep(new Random().nextInt(5000));
+						GemTestReporter2.endTestCase();
+						
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
 					}
 				
 			};
@@ -29,7 +40,7 @@ public class GemReportingTest2 {
 			
 		}	
 		
-		Thread.sleep(60000);
+		Thread.sleep(15000);
 		GemTestReporter2.endSuite();
 	}
 

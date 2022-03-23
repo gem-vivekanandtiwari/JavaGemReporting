@@ -36,6 +36,11 @@ class TestCase_Details {
 		this.ignore = ignore;
 	}
 
+	public  String toString() {
+		return "tc_run_id = "+ this.tc_run_id + ", start_time = "+ this.start_time +", end_time = "+ this.end_time
+				+", name = "+this.name + ", category = "+this.category+ ", log_file = "+this.log_file + ", status = "+this.status;
+	}
+	
 	public TestCase_Details(String testcaseName, String category, String user, String productType) {
 		this(testcaseName,category,user,productType, false);
 	}
