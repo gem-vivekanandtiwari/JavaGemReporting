@@ -100,7 +100,7 @@ public class GemTestReporter2 {
 		executionTimeDetail.add("EXECUTION ENDED ON", endTimeDetail);
 
 		executionTimeDetail.addProperty("EXECUTION DURATION",
-				testCase_Details.get().getEnd_time()-testCase_Details.get().getStart_time()+ " seconds");
+				(testCase_Details.get().getEnd_time()-testCase_Details.get().getStart_time())/1000+ " seconds");
 		metaData.add(executionTimeDetail); 
 		metaData.add(getStepStats());
 
