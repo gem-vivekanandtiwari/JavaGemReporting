@@ -46,7 +46,7 @@ public class GemTestReporter2 {
 
 	public static void addTestStep(String stepTitle, String stepDescription , STATUS status, Map<String, String> extraKeys) {
 		JsonObject step = new JsonObject();
-		step.addProperty("title", stepTitle);
+		step.addProperty("title", "<b>"+stepTitle+"</b>");
 		step.addProperty("description", stepDescription);
 		step.addProperty("status", status.name());	
 		if(extraKeys!=null) {
