@@ -20,10 +20,19 @@ public class GemTestReporter2 {
 	private static ThreadLocal<JsonArray> steps = new ThreadLocal<JsonArray>();
 	private static volatile Suits_Details suiteDetails;
 	private static QuartzReporting reporting ;
+	public static String ReportLocation = null;
 
 
+
+	public static void startSuite(String projectName, String env,String reportLocation) {
+		ReportLocation=reportLocation;
+		String s_run_id = projectName+"_"+GemReportingUtility.getCurrentTimeInMilliSecond()+"_"+env.toUpperCase();
+		suiteDetails = new Suits_Details(s_run_id, projectName, env) ;
+		reporting = new QuartzReporting(suiteDetails);
+	}
 
 	public static void startSuite(String projectName, String env) {
+		ReportLocation = null;
 		String s_run_id = projectName+"_"+GemReportingUtility.getCurrentTimeInMilliSecond()+"_"+env.toUpperCase();
 		suiteDetails = new Suits_Details(s_run_id, projectName, env) ;
 		reporting = new QuartzReporting(suiteDetails);
