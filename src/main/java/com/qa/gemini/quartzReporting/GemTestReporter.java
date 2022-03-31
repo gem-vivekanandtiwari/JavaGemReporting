@@ -15,23 +15,32 @@ public class GemTestReporter {
 
 
 	
-	private static TestCase_Details testCase_Details;
+	private static ThreadLocal<TestCase_Details> testCase_Details = new ThreadLocal<TestCase_Details>();
 	private static JsonObject stepJson = new JsonObject();
-	private static JsonArray steps;
-	private static Suits_Details suiteDetails;
+	private static ThreadLocal<JsonArray> steps = new ThreadLocal<JsonArray>();
+	private static volatile Suits_Details suiteDetails;
 	private static QuartzReporting reporting ;
+	public static String ReportLocation = null;
 
 
+
+	public static void startSuite(String projectName, String env,String reportLocation) {
+		ReportLocation=reportLocation;
+		String s_run_id = projectName+"_"+GemReportingUtility.getCurrentTimeInMilliSecond()+"_"+env.toUpperCase();
+		suiteDetails = new Suits_Details(s_run_id, projectName, env) ;
+		reporting = new QuartzReporting(suiteDetails);
+	}
 
 	public static void startSuite(String projectName, String env) {
+		ReportLocation = null;
 		String s_run_id = projectName+"_"+GemReportingUtility.getCurrentTimeInMilliSecond()+"_"+env.toUpperCase();
 		suiteDetails = new Suits_Details(s_run_id, projectName, env) ;
 		reporting = new QuartzReporting(suiteDetails);
 	}
 
 	public static void startTestCase(String testcaseName, String category, String productType, boolean ignore) {
-		steps = new JsonArray();
-		testCase_Details = new TestCase_Details(testcaseName, category, GemReportingUtility.getCurrentUserName(), productType, ignore);
+		steps.set(new JsonArray());
+		testCase_Details.set(new TestCase_Details(testcaseName, category, GemReportingUtility.getCurrentUserName(), productType, ignore));
 	}
 
 
@@ -46,7 +55,7 @@ public class GemTestReporter {
 
 	public static void addTestStep(String stepTitle, String stepDescription , STATUS status, Map<String, String> extraKeys) {
 		JsonObject step = new JsonObject();
-		step.addProperty("title", stepTitle);
+		step.addProperty("title", "<b>"+stepTitle+"</b>");
 		step.addProperty("description", stepDescription);
 		step.addProperty("status", status.name());	
 		if(extraKeys!=null) {
@@ -55,23 +64,24 @@ public class GemTestReporter {
 				step.addProperty(key, extraKeys.get(key));
 			}
 		}
-		steps.add(step);
+		steps.get().add(step);
 	}
 
 
 
 
 
-	public static void endTestCase() {
-		testCase_Details.setStatus(steps);
-		testCase_Details.endTestCase();
-		suiteDetails.addTestCaseDetail(testCase_Details);
+	public synchronized static void endTestCase() {
+		testCase_Details.get().setStatus(steps.get());
+		testCase_Details.get().endTestCase();
+		System.out.println(testCase_Details.get().toString());
+		suiteDetails.addTestCaseDetail(testCase_Details.get());
 
 
-		String testCaseRunID = testCase_Details.getTc_run_id();
+		String testCaseRunID = testCase_Details.get().getTc_run_id();
 
 		JsonObject testCaseStep= new JsonObject();
-		testCaseStep.add("steps", steps);
+		testCaseStep.add("steps", steps.get());
 		testCaseStep.add("metaData", createTestCaseMetaData());
 		stepJson.add(testCaseRunID, testCaseStep);
 	}
@@ -79,26 +89,27 @@ public class GemTestReporter {
 	private static JsonArray createTestCaseMetaData() {
 		JsonArray metaData =  new JsonArray();
 		JsonObject testcaseName = new JsonObject();
-		testcaseName.addProperty("TESTCASE NAME", testCase_Details.getName());
+		testcaseName.addProperty("TESTCASE NAME", testCase_Details.get().getName());
 		testcaseName.addProperty("SERVICE PROJECT", "");
 		JsonObject dateOfExecution = new JsonObject();
-		dateOfExecution.addProperty("value", testCase_Details.getStart_time());
+		dateOfExecution.addProperty("value", testCase_Details.get().getStart_time());
 		dateOfExecution.addProperty("type", "date");
 		testcaseName.add("DATE OF EXECUTION",dateOfExecution);
 		metaData.add(testcaseName);
 
 		JsonObject executionTimeDetail = new JsonObject();
 		JsonObject startTimeDetail = new JsonObject();
-		startTimeDetail.addProperty("value", testCase_Details.getStart_time());
+		startTimeDetail.addProperty("value", testCase_Details.get().getStart_time());
 		startTimeDetail.addProperty("type", "date");
 		executionTimeDetail.add("EXECUTION STARTED ON", startTimeDetail);
 
 		JsonObject endTimeDetail =  new JsonObject();
-		endTimeDetail.addProperty("value", testCase_Details.getEnd_time());
+		endTimeDetail.addProperty("value", testCase_Details.get().getEnd_time());
 		endTimeDetail.addProperty("type", "date");
 		executionTimeDetail.add("EXECUTION ENDED ON", endTimeDetail);
 
-		executionTimeDetail.addProperty("EXECUTION DURATION", testCase_Details.getEnd_time()-testCase_Details.getStart_time()+ " seconds");
+		executionTimeDetail.addProperty("EXECUTION DURATION",
+				(testCase_Details.get().getEnd_time()-testCase_Details.get().getStart_time())/1000+ " seconds");
 		metaData.add(executionTimeDetail); 
 		metaData.add(getStepStats());
 
@@ -107,10 +118,10 @@ public class GemTestReporter {
 
 	private static JsonObject getStepStats() {
 		JsonObject stepStats = new JsonObject();
-		stepStats.addProperty("TOTAL", steps.size());
+		stepStats.addProperty("TOTAL", steps.get().size());
 		Map<String, Integer> statMap = new HashMap<String, Integer>();
 
-		for (JsonElement step : steps) {
+		for (JsonElement step : steps.get()) {
 			String statusName = step.getAsJsonObject().get("status").getAsString();
 			if(statMap.get(statusName)== null) {
 				statMap.put(statusName, 1)	;

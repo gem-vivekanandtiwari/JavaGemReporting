@@ -14,7 +14,7 @@ public class GemReportingUtility {
 	
 	
 	public static void createReport(String suiteDetail, String stepJson) throws IOException {
-		String loc = GemTestReporter2.ReportLocation;
+		String loc = GemTestReporter.ReportLocation;
 //		String htmlTemplate = FileUtils.readFileToString(new File(ClassLoader.getSystemResource("QuanticReport.html").getFile()), Charset.defaultCharset());
 		String htmlTemplate = IOUtils.toString(ClassLoader.getSystemResourceAsStream("QuanticReport.html"), Charset.defaultCharset());
 		htmlTemplate = htmlTemplate.replace("var obj = '';","var obj = "+suiteDetail+";");
