@@ -46,12 +46,32 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js" integrity="sha512-Y2IiVZeaBwXG1wSV7f13plqlmFOx8MdjuHyYFVoYzhyRr3nH/NMDjTBSswijzADdNzMyWNetbLMfOpIPl6Cv9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" integrity="sha512-Velp0ebMKjcd9RiCoaHhLXkR1sFoCCWXNp6w4zj1hfMifYB5441C+sKeBl/T/Ka6NjBiRfBBQRaQq65ekYz3UQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.js" integrity="sha512-YibiFIKqwi6sZFfPm5HNHQYemJwFbyyYHjrr3UT+VobMt/YBo1kBxgui5RWc4C3B4RJMYCdCAJkbXHt+irKfSA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <style>
+  .thumb {
+  border: 1px solid #ddd; /* Gray border */
+  border-radius: 4px;  /* Rounded border */
+  padding: 5px; /* Some padding */
+  width: 100px; /* Set a small width */
+  min-height:86px;
+  max-height: 86px;
+}
+.thumb:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
     body {
       background: #fafbff;
-      transform: scale(0.9);
-      transform-origin: top center;
+      /* transform: scale(0.9);
+      transform-origin: top center; */
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
     }
 
     #heading {
@@ -199,142 +219,266 @@
     .hiddenRow {
       padding: 0px !important;
     }
+
+#myImg {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal-img {
+  display: none;
+  margin-top:50%;
+  margin-bottom:50%;
+ padding-top:5%;
+  position: fixed;
+  z-index: 1;
+  height:fit-content;
+  background-color: rgb(129, 125, 125);
+  background-color: rgba(129, 125, 125,0.9);
+
+}
+
+/* Modal Content (image) */
+.modal-img-content {
+  /* max-height: 700px;
+height: 100%;
+  display: block;
+  width: 100vw; */
+
+}
+
+/* Caption of Modal Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation */
+.modal-img-content, #caption {
+  -webkit-animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+  from {-webkit-transform:scale(0)}
+  to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+/* @media only screen and (max-width: 700px){
+  .modal-img-content {
+    width: 100%;
+  }
+} */
   </style>
 <body onload="constructPage()">
+<div class="modal fade"
+     id="myModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true"  data-scroll="false">
+    <div class="modal-dialog modal-xl vertically-centered"
+         role="document">
+        <div class="modal-content" style="width:80vw !important">
+            <!-- Modal heading -->
+            <div class="mb-5 float-right">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                 <span style="color:black !important" aria-hidden="true">
+                   ×
+               </span>
+                </button>
+            </div>
+
+            <!-- Modal body with image -->
+            <div class="modal-body mt-2 text-center mb-2">
+                <img style="width:70vw !important; max-height:450px" class="modal-img-content" id="img01">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <div class="container-fluid">
-    <div class="mt-3 text-center">
-        <div>
-            <h4 class="my-4" id="heading">
-                <b
-                ><span id="productType"></span> AUTOMATED TEST EXECUTION REPORT</b
+    <!-- <div class="mt-3 text-center">
+          <div id="myModal" class="modal-img">
+       <span onClick="closeImage()" class="close" style="color:black !important">&times;</span>
+        <img class="modal-img-content" id="img01">
+           <div id="caption"></div>
+         </div>
+        <div> -->
+
+
+
+    <h4 class="my-4" id="heading">
+        <b
+        ><span id="productType"></span> AUTOMATED TEST EXECUTION REPORT</b
+        >
+    </h4>
+    <div class="ml-5 mt-3">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item mr-1" role="presentation">
+                <button
+                        class="btn nav-link active"
+                        id="pills-overview-tab"
+                        data-toggle="pill"
+                        data-target="#pills-overview"
+                        type="button"
+                        role="tab"
+                        aria-controls="pills-home"
+                        aria-selected="true"
+                        onclick="showFilter('overview')"
                 >
-            </h4>
-            <div class="ml-5 mt-3">
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item mr-1" role="presentation">
-                        <button
-                                class="btn nav-link active"
-                                id="pills-overview-tab"
-                                data-toggle="pill"
-                                data-target="#pills-overview"
-                                type="button"
-                                role="tab"
-                                aria-controls="pills-home"
-                                aria-selected="true"
-                                onclick="showFilter('overview')"
-                        >
-                            Overview
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button
-                                class="btn nav-link"
-                                id="pills-testcase-tab"
-                                data-toggle="pill"
-                                data-target="#pills-testcase"
-                                type="button"
-                                role="tab"
-                                aria-controls="pills-profile"
-                                aria-selected="false"
-                                onclick="showFilter('testcase')"
-                        >
-                            Testcase Details
-                        </button>
-                    </li>
-                    <li
-                            id="filters"
-                            class="nav-item ml-auto"
-                            style="float: right; display: none"
-                    >
-                        <button
-                                class="btn"
-                                style="
+                    Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button
+                        class="btn nav-link"
+                        id="pills-testcase-tab"
+                        data-toggle="pill"
+                        data-target="#pills-testcase"
+                        type="button"
+                        role="tab"
+                        aria-controls="pills-profile"
+                        aria-selected="false"
+                        onclick="showFilter('testcase')"
+                >
+                    Testcase Details
+                </button>
+            </li>
+            <li
+                    id="filters"
+                    class="nav-item ml-auto"
+                    style="float: right; display: none"
+            >
+                <button
+                        class="btn"
+                        style="
                     background: white;
                     border-radius: 5px !important;
                     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.05);
                   "
-                                onclick="showFilterCards('show')"
-                        >
-                            <i class="fa fa-filter"></i> Filters
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <div class="tab-content" id="pills-tabContent">
-                <div
-                        class="tab-pane fade show active overview"
-                        id="pills-overview"
-                        role="tabpanel"
-                        aria-labelledby="pills-overview-tab"
-                ></div>
-                <div
-                        class="tab-pane fade"
-                        id="pills-testcase"
-                        role="tabpanel"
-                        aria-labelledby="pills-testcase-tab"
+                        onclick="showFilterCards('show')"
                 >
-                    <div class="mt-3 ml-5 mr-1">
-                        <div
-                                class="card pt-3 pb-3"
-                                id="filtercard"
-                                style="
+                    <i class="fa fa-filter"></i> Filters
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content" id="pills-tabContent">
+        <div
+                class="tab-pane fade show active overview"
+                id="pills-overview"
+                role="tabpanel"
+                aria-labelledby="pills-overview-tab"
+        ></div>
+        <div
+                class="tab-pane fade"
+                id="pills-testcase"
+                role="tabpanel"
+                aria-labelledby="pills-testcase-tab"
+        >
+            <div class="mt-3 ml-5 mr-1">
+                <div
+                        class="card pt-3 pb-3"
+                        id="filtercard"
+                        style="
                     display: none;
                     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.05);
                     border-radius: 4px !important;
                   "
-                        >
-                            <div class="d-flex mx-4 mb-3">
-                                <span id="filterHeading" class="tableHeading">Filters</span>
-                                <span class="ml-auto"
-                                ><i
-                                        class="fa fa-times"
-                                        style="cursor: pointer"
-                                        aria-hidden="true"
-                                        onclick="showFilterCards('close')"
-                                ></i>
+                >
+                    <div class="d-flex mx-4 mb-3">
+                        <span id="filterHeading" class="tableHeading">Filters</span>
+                        <span class="ml-auto"
+                        ><i
+                                class="fa fa-times"
+                                style="cursor: pointer"
+                                aria-hidden="true"
+                                onclick="showFilterCards('close')"
+                        ></i>
                     </span>
-                            </div>
-                            <div class="d-flex ml-4">
-                                <div class="">
-                                    <input
-                                            class="form-control search-key"
-                                            type="text"
-                                            id="name"
-                                            placeholder="Search by Tc_name"
-                                            style="width: 270px"
-                                    />
-                                </div>
-                                <div class="col-sm-2 col-md-2 col-lg-2">
-                                    <select
-                                            class="custom-select search-key"
-                                            style="width: 270px"
-                                            id="status"
-                                    ></select>
-                                </div>
-                            </div>
-                            <div class="mx-4 mt-3">
-                                <div class="d-flex">
-                                    <!-- <button class="btn" id="applyfilter" onclick="applyfilter()" style="display:block; border-radius:5px !important; color: white !important">Apply Filters</button> -->
-                                    <button
-                                            class="btn ml-2"
-                                            id="clear"
-                                            onclick="myFunction()"
-                                            style="
+                    </div>
+                    <div class="d-flex ml-4">
+                        <div class="">
+                            <input
+                                    class="form-control search-key"
+                                    type="text"
+                                    id="name"
+                                    placeholder="Search by Tc_name"
+                                    style="width: 270px"
+                            />
+                        </div>
+                        <div class="col-sm-2 col-md-2 col-lg-2">
+                            <select
+                                    class="custom-select search-key"
+                                    style="width: 270px"
+                                    id="status"
+                            ></select>
+                        </div>
+                    </div>
+                    <div class="mx-4 mt-3">
+                        <div class="d-flex">
+                            <!-- <button class="btn" id="applyfilter" onclick="applyfilter()" style="display:block; border-radius:5px !important; color: white !important">Apply Filters</button> -->
+                            <button
+                                    class="btn ml-2"
+                                    id="clear"
+                                    onclick="myFunction()"
+                                    style="
                           display: block;
                           border-radius: 5px !important;
                           color: white !important;
                         "
-                                    >
-                                        Clear
-                                    </button>
-                                </div>
-                            </div>
+                            >
+                                Clear
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+</div>
 </div>
 </body>
 <script>
@@ -349,6 +493,7 @@
       1: "rgba(91, 170, 147)",
       2: "rgba(143, 210, 190)",
     };
+
     var obj = '';
     var stepobj = '';
 
@@ -411,6 +556,7 @@
       return value;
     }
     function constructPage() {
+
       var infraTable = getInfraDetailsTable(obj.Suits_Details);
       $("#pills-overview").append(infraTable);
       var cardDetailsOverview = getCardDetails(obj.Suits_Details.Testcase_Info);
@@ -445,6 +591,8 @@
         obj.Suits_Details.TestCase_Details
       );
       $("#pills-testcase").append(testcaseDetailsTable);
+
+
     }
 
     function getTestcaseDetailsTable(list) {
@@ -563,6 +711,10 @@
         tcellAccord = trowAccor.insertCell(-1);
         tcellAccord.className = "hiddenRow";
         tcellAccord.setAttribute("colspan", cols.length);
+
+
+
+
         var accordDiv = document.createElement("div");
         accordDiv.className = "accordion-body collapse";
         accordDiv.id = "accord" + i;
@@ -587,6 +739,7 @@
           i
         );
         accordDiv.append(tableAccord[0]);
+        // tcellAccord.append(imgmodaldiv);
         tcellAccord.append(accordDiv);
       }
 
@@ -640,6 +793,7 @@
         trow.style.backgroundColor = "#FFFFFF";
         for (var j = 0; j < cols.length; j++) {
           var cell = trow.insertCell(-1);
+          cell.setAttribute("class","align-middle");
           var att = document.createAttribute("data-input");
           if (cols[j].includes(" ")) {
             var v = cols[j].replace(" ", "_");
@@ -648,8 +802,38 @@
             att.value = cols[j];
           }
           cell.setAttributeNode(att);
+          if(cols[j].toLowerCase()==='screenshot'){
+            if(list[i][cols[j]]){
+            var image = document.createElement("img");
+image.setAttribute('src',list[i][cols[j]]);
+image.setAttribute('class',"thumb");
+image.setAttribute('image',"Screenshot");
+image.addEventListener("click",function(){
+  var modal = document.getElementById("myModal");
 
-          if (typeof list[i][cols[j]] === "object") {
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var img = document.getElementById("myImg");
+var modalImg = document.getElementById("img01");
+var captionText = document.getElementById("caption");
+modal.style.display = "block";
+  modalImg.src = this.src;
+  captionText.innerHTML = this.alt;
+});
+
+image.setAttribute('data-toggle','modal');
+image.setAttribute('data-target','#myModal');
+// modal.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+image.setAttribute('id',"myImg");
+cell.appendChild(image);
+
+            }else{
+              var divHandle=document.createElement("div");
+              // divHandle.setAttribute('class','text-center');
+              // divHandle.innerHTML="(blank)";
+              cell.appendChild(divHandle);
+            }
+          }
+          else if (typeof list[i][cols[j]] === "object") {
             var a = document.createElement("a");
             a.href = list[i][cols[j]]["href"];
             a.target = "_blank";
@@ -1327,5 +1511,11 @@ while (n--) {
       var date = new Date(value);
       return date.toLocaleString();
     }
+    function closeImage(){
+      var modal = document.getElementById("myModal");
+      modal.style.display = "none";
+
+    }
+
   </script>
 </html>

@@ -49,7 +49,7 @@ public class GemTestReporter {
 	}
 	public static void addTestStep(String stepTitle, String stepDescription , STATUS status, String screenShotPath) {
 		Map<String, String> scrnshot = new HashMap<String, String>();
-		scrnshot.put("ScreenShot", screenShotPath);
+		scrnshot.put("ScreenShot", "data:image/gif;base64, "+screenShotPath);
 		addTestStep(stepTitle, stepDescription, status,scrnshot);
 	}
 
