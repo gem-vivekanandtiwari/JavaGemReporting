@@ -70,8 +70,7 @@
       background: #fafbff;
       /* transform: scale(0.9);
       transform-origin: top center; */
-      overflow-x: hidden !important;
-      overflow-y: auto !important;
+    overflow:auto !important;
     }
 
     #heading {
@@ -240,7 +239,12 @@
   background-color: rgba(129, 125, 125,0.9);
 
 }
-
+.modal {
+  overflow-y:auto;
+}
+.modal-body {
+    word-wrap: break-word;
+}
 /* Modal Content (image) */
 .modal-img-content {
   /* max-height: 700px;
@@ -297,6 +301,10 @@ height: 100%;
   text-decoration: none;
   cursor: pointer;
 }
+.setWidth{
+  word-wrap: break-word;
+  max-width: 80px;
+}
 
 /* 100% Image Width on Smaller Screens */
 /* @media only screen and (max-width: 700px){
@@ -327,6 +335,7 @@ height: 100%;
                 </button>
             </div>
 
+
             <!-- Modal body with image -->
             <div class="modal-body mt-2 text-center mb-2">
                 <img style="width:70vw !important; max-height:450px" class="modal-img-content" id="img01">
@@ -335,7 +344,41 @@ height: 100%;
         </div>
     </div>
 </div>
+<!-- --------------Extra Text Modal---------------- -->
+<div class="modal"
+     id="trimModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="exampleModalLabel2"
+     aria-hidden="true"  data-scroll="false">
+    <div class="modal-dialog modal-xl vertically-centered"
+         role="document">
+        <div class="modal-content" style="width:80vw !important">
+            <!-- Modal heading -->
+            <div class="modal-title mt-3 text-center" ><h2 id="trimModaltitle"></h2></div>
+            <div class="mb-3 float-right">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        onClick="closeModal('trimModal')"
+                        aria-label="Close">
 
+                        <span style="color:black !important" aria-hidden="true">
+                          ×
+                      </span>
+                </button>
+            </div>
+
+
+            <!-- Modal body with image -->
+            <div class="modal-body mt-2 text-center mb-2" id="trimModalcontent" >
+                <!-- <img style="width:70vw !important; max-height:450px" class="modal-img-content" id="img01"> -->
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- --------------Extra Text Modal---------------- -->
 
 <div class="container-fluid">
     <!-- <div class="mt-3 text-center">
@@ -615,6 +658,7 @@ height: 100%;
       }
       if (!cols.includes("S.No.")) {
         cols.unshift("S.No.");
+
       }
       // Create a table element
       var table = document.createElement("table");
@@ -683,6 +727,7 @@ height: 100%;
               cell.innerHTML = changeTime(list[i][cols[j]]["value"]);
             } else if (cols[j].includes("S.No.")) {
               cell.innerHTML = changeSerial(i)["value"];
+              // cell.style.maxWidth ="20px !important";
             } else if (cols[j].toUpperCase().includes("DURATION")) {
               cell.innerHTML = getDuration(
                 list[i]["start_time"]["value"],
@@ -793,7 +838,8 @@ height: 100%;
         trow.style.backgroundColor = "#FFFFFF";
         for (var j = 0; j < cols.length; j++) {
           var cell = trow.insertCell(-1);
-          cell.setAttribute("class","align-middle");
+          cell.setAttribute("class","align-middle setWidth");
+
           var att = document.createAttribute("data-input");
           if (cols[j].includes(" ")) {
             var v = cols[j].replace(" ", "_");
@@ -861,11 +907,13 @@ cell.appendChild(image);
             cell.innerHTML = convertIntoDateTime(list[i][cols[j]]);
           } else if (cols[j] === "S.No.") {
             cell.innerHTML = i + 1;
+            cell.style.width ="20px";
+
           } else {
             if (list[i][cols[j]] === undefined) {
               list[i][cols[j]] = "-";
             }
-            cell.innerHTML = list[i][cols[j]];
+            cell.append(getTrimData(list[i][cols[j]],cols[j]));
           }
         }
       }
@@ -1511,10 +1559,37 @@ while (n--) {
       var date = new Date(value);
       return date.toLocaleString();
     }
-    function closeImage(){
-      var modal = document.getElementById("myModal");
+    function closeModal(id){
+      var modal = document.getElementById(id);
       modal.style.display = "none";
 
+    }
+    function getTrimData(data,column){
+console.log("column",column);
+      var div = document.createElement("div");
+      var span = document.createElement("span");
+      var button=document.createElement("button");
+      button.innerHTML = "See More";
+      button.addEventListener("click", function(){
+var trimModal= document.getElementById("trimModal");
+trimModal.style.display="block";
+var trimModalcontent=document.getElementById("trimModalcontent");
+trimModalcontent.innerHTML=data;
+var trimModaltitle=document.getElementById("trimModaltitle");
+trimModaltitle.innerHTML= column.toUpperCase();
+trimModal.style.backgroundColor="rgba(0, 0, 0, 0.5)";
+
+      });
+      button.setAttribute("class","ml-2 btn btn-link");
+      if(data.length>150){
+      span.innerHTML = data.slice(0,150) + "...";
+      span.appendChild(button);
+      }else{
+        span.innerHTML = data;
+      }
+      div.appendChild(span);
+
+return div;
     }
 
   </script>
