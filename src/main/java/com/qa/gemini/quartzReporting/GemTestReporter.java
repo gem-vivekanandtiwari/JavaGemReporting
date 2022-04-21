@@ -14,146 +14,144 @@ import com.google.gson.JsonObject;
 public class GemTestReporter {
 
 
-	
-	private static ThreadLocal<TestCase_Details> testCase_Details = new ThreadLocal<TestCase_Details>();
-	private static JsonObject stepJson = new JsonObject();
-	private static ThreadLocal<JsonArray> steps = new ThreadLocal<JsonArray>();
-	private static volatile Suits_Details suiteDetails;
-	private static QuartzReporting reporting ;
-	public static String ReportLocation = null;
+    private static ThreadLocal<TestCase_Details> testCase_Details = new ThreadLocal<TestCase_Details>();
+    private static JsonObject stepJson = new JsonObject();
+    private static ThreadLocal<JsonArray> steps = new ThreadLocal<JsonArray>();
+    private static volatile Suits_Details suiteDetails;
+    private static QuartzReporting reporting;
+    public static String ReportLocation = null;
 
 
+    public static void startSuite(String projectName, String env, String reportLocation) {
+        ReportLocation = reportLocation;
+        String s_run_id = projectName + "_" + GemReportingUtility.getCurrentTimeInMilliSecond() + "_" + env.toUpperCase();
+        suiteDetails = new Suits_Details(s_run_id, projectName, env);
+        reporting = new QuartzReporting(suiteDetails);
+    }
 
-	public static void startSuite(String projectName, String env,String reportLocation) {
-		ReportLocation=reportLocation;
-		String s_run_id = projectName+"_"+GemReportingUtility.getCurrentTimeInMilliSecond()+"_"+env.toUpperCase();
-		suiteDetails = new Suits_Details(s_run_id, projectName, env) ;
-		reporting = new QuartzReporting(suiteDetails);
-	}
+    public static void startSuite(String projectName, String env) {
+        ReportLocation = null;
+        String s_run_id = projectName + "_" + GemReportingUtility.getCurrentTimeInMilliSecond() + "_" + env.toUpperCase();
+        suiteDetails = new Suits_Details(s_run_id, projectName, env);
+        reporting = new QuartzReporting(suiteDetails);
+    }
 
-	public static void startSuite(String projectName, String env) {
-		ReportLocation = null;
-		String s_run_id = projectName+"_"+GemReportingUtility.getCurrentTimeInMilliSecond()+"_"+env.toUpperCase();
-		suiteDetails = new Suits_Details(s_run_id, projectName, env) ;
-		reporting = new QuartzReporting(suiteDetails);
-	}
-
-	public static void startTestCase(String testcaseName, String category, String productType, boolean ignore) {
-		steps.set(new JsonArray());
-		testCase_Details.set(new TestCase_Details(testcaseName, category, GemReportingUtility.getCurrentUserName(), productType, ignore));
-	}
-
-
-	public static void addTestStep(String stepTitle, String stepDescription , STATUS status) {
-		addTestStep(stepTitle, stepDescription, status,new HashMap<String, String>());
-	}
-	public static void addTestStep(String stepTitle, String stepDescription , STATUS status, String screenShotPath) {
-		Map<String, String> scrnshot = new HashMap<String, String>();
-		scrnshot.put("ScreenShot", "data:image/gif;base64, "+screenShotPath);
-		addTestStep(stepTitle, stepDescription, status,scrnshot);
-	}
-
-	public static void addTestStep(String stepTitle, String stepDescription , STATUS status, Map<String, String> extraKeys) {
-		JsonObject step = new JsonObject();
-		step.addProperty("title", "<b>"+stepTitle+"</b>");
-		step.addProperty("description", stepDescription);
-		step.addProperty("status", status.name());	
-		if(extraKeys!=null) {
-			Set<String> extraKeySet = extraKeys.keySet();
-			for(String key : extraKeySet) {
-				step.addProperty(key, extraKeys.get(key));
-			}
-		}
-		steps.get().add(step);
-	}
+    public static void startTestCase(String testcaseName, String category, String productType, boolean ignore) {
+        steps.set(new JsonArray());
+        testCase_Details.set(new TestCase_Details(testcaseName, category, GemReportingUtility.getCurrentUserName(), productType, ignore));
+    }
 
 
+    public static void addTestStep(String stepTitle, String stepDescription, STATUS status) {
+        addTestStep(stepTitle, stepDescription, status, new HashMap<String, String>());
+    }
+
+    public static void addTestStep(String stepTitle, String stepDescription, STATUS status, String screenShotPath) {
+        Map<String, String> scrnshot = new HashMap<String, String>();
+//		scrnshot.put("ScreenShot", "data:image/gif;base64, "+screenShotPath);
+    	scrnshot.put("ScreenShot", screenShotPath);
+
+        addTestStep(stepTitle, stepDescription, status, scrnshot);
+    }
+
+    public static void addTestStep(String stepTitle, String stepDescription, STATUS status, Map<String, String> extraKeys) {
+        JsonObject step = new JsonObject();
+        step.addProperty("title", "<b>" + stepTitle + "</b>");
+        step.addProperty("description", stepDescription);
+        step.addProperty("status", status.name());
+        if (extraKeys != null) {
+            Set<String> extraKeySet = extraKeys.keySet();
+            for (String key : extraKeySet) {
+                step.addProperty(key, extraKeys.get(key));
+            }
+        }
+        steps.get().add(step);
+    }
 
 
+    public synchronized static void endTestCase() {
+        testCase_Details.get().setStatus(steps.get());
+        testCase_Details.get().endTestCase();
+        System.out.println(testCase_Details.get().toString());
+        suiteDetails.addTestCaseDetail(testCase_Details.get());
 
-	public synchronized static void endTestCase() {
-		testCase_Details.get().setStatus(steps.get());
-		testCase_Details.get().endTestCase();
-		System.out.println(testCase_Details.get().toString());
-		suiteDetails.addTestCaseDetail(testCase_Details.get());
 
+        String testCaseRunID = testCase_Details.get().getTc_run_id();
 
-		String testCaseRunID = testCase_Details.get().getTc_run_id();
+        JsonObject testCaseStep = new JsonObject();
+        testCaseStep.add("steps", steps.get());
+        testCaseStep.add("metaData", createTestCaseMetaData());
+        stepJson.add(testCaseRunID, testCaseStep);
+    }
 
-		JsonObject testCaseStep= new JsonObject();
-		testCaseStep.add("steps", steps.get());
-		testCaseStep.add("metaData", createTestCaseMetaData());
-		stepJson.add(testCaseRunID, testCaseStep);
-	}
+    private static JsonArray createTestCaseMetaData() {
+        JsonArray metaData = new JsonArray();
+        JsonObject testcaseName = new JsonObject();
+        testcaseName.addProperty("TESTCASE NAME", testCase_Details.get().getName());
+        testcaseName.addProperty("SERVICE PROJECT", "");
+        JsonObject dateOfExecution = new JsonObject();
+        dateOfExecution.addProperty("value", testCase_Details.get().getStart_time());
+        dateOfExecution.addProperty("type", "date");
+        testcaseName.add("DATE OF EXECUTION", dateOfExecution);
+        metaData.add(testcaseName);
 
-	private static JsonArray createTestCaseMetaData() {
-		JsonArray metaData =  new JsonArray();
-		JsonObject testcaseName = new JsonObject();
-		testcaseName.addProperty("TESTCASE NAME", testCase_Details.get().getName());
-		testcaseName.addProperty("SERVICE PROJECT", "");
-		JsonObject dateOfExecution = new JsonObject();
-		dateOfExecution.addProperty("value", testCase_Details.get().getStart_time());
-		dateOfExecution.addProperty("type", "date");
-		testcaseName.add("DATE OF EXECUTION",dateOfExecution);
-		metaData.add(testcaseName);
+        JsonObject executionTimeDetail = new JsonObject();
+        JsonObject startTimeDetail = new JsonObject();
+        startTimeDetail.addProperty("value", testCase_Details.get().getStart_time());
+        startTimeDetail.addProperty("type", "date");
+        executionTimeDetail.add("EXECUTION STARTED ON", startTimeDetail);
 
-		JsonObject executionTimeDetail = new JsonObject();
-		JsonObject startTimeDetail = new JsonObject();
-		startTimeDetail.addProperty("value", testCase_Details.get().getStart_time());
-		startTimeDetail.addProperty("type", "date");
-		executionTimeDetail.add("EXECUTION STARTED ON", startTimeDetail);
+        JsonObject endTimeDetail = new JsonObject();
+        endTimeDetail.addProperty("value", testCase_Details.get().getEnd_time());
+        endTimeDetail.addProperty("type", "date");
+        executionTimeDetail.add("EXECUTION ENDED ON", endTimeDetail);
 
-		JsonObject endTimeDetail =  new JsonObject();
-		endTimeDetail.addProperty("value", testCase_Details.get().getEnd_time());
-		endTimeDetail.addProperty("type", "date");
-		executionTimeDetail.add("EXECUTION ENDED ON", endTimeDetail);
+        executionTimeDetail.addProperty("EXECUTION DURATION",
+                (testCase_Details.get().getEnd_time() - testCase_Details.get().getStart_time()) / 1000 + " seconds");
+        metaData.add(executionTimeDetail);
+        metaData.add(getStepStats());
 
-		executionTimeDetail.addProperty("EXECUTION DURATION",
-				(testCase_Details.get().getEnd_time()-testCase_Details.get().getStart_time())/1000+ " seconds");
-		metaData.add(executionTimeDetail); 
-		metaData.add(getStepStats());
+        return metaData;
+    }
 
-		return metaData;
-	}
+    private static JsonObject getStepStats() {
+        JsonObject stepStats = new JsonObject();
+        stepStats.addProperty("TOTAL", steps.get().size());
+        Map<String, Integer> statMap = new HashMap<String, Integer>();
 
-	private static JsonObject getStepStats() {
-		JsonObject stepStats = new JsonObject();
-		stepStats.addProperty("TOTAL", steps.get().size());
-		Map<String, Integer> statMap = new HashMap<String, Integer>();
+        for (JsonElement step : steps.get()) {
+            String statusName = step.getAsJsonObject().get("status").getAsString();
+            if (statMap.get(statusName) == null) {
+                statMap.put(statusName, 1);
+            } else {
+                statMap.put(statusName, statMap.get(statusName) + 1);
+            }
+        }
+        for (String statusKey : statMap.keySet()) {
+            stepStats.addProperty(statusKey, statMap.get(statusKey));
+        }
 
-		for (JsonElement step : steps.get()) {
-			String statusName = step.getAsJsonObject().get("status").getAsString();
-			if(statMap.get(statusName)== null) {
-				statMap.put(statusName, 1)	;
-			}else {
-				statMap.put(statusName, statMap.get(statusName)+1);
-			}
-		}
-		for (String  statusKey : statMap.keySet()) {
-			stepStats.addProperty(statusKey, statMap.get(statusKey));
-		}
+        return stepStats;
 
-		return stepStats;
+    }
 
-	}
+    public static void endSuite() {
+        suiteDetails.endSuite();
+        createReport();
 
-	public static void endSuite() {
-		suiteDetails.endSuite();
-		createReport();
+    }
 
-	}
-
-	private static void createReport() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		//String suiteDetail = gson.toJson(reporting, QuartzReporting.class);
-		JsonElement suiteDetail = gson.toJsonTree(reporting);
-		System.out.println(suiteDetail.toString());
-		System.out.println(stepJson.toString());
-		try {
-			GemReportingUtility.createReport(suiteDetail.toString(), stepJson.toString());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    private static void createReport() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        //String suiteDetail = gson.toJson(reporting, QuartzReporting.class);
+        JsonElement suiteDetail = gson.toJsonTree(reporting);
+        System.out.println(suiteDetail.toString());
+        System.out.println(stepJson.toString());
+        try {
+            GemReportingUtility.createReport(suiteDetail.toString(), stepJson.toString());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }
