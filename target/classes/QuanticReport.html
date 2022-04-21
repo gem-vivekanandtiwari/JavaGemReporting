@@ -70,7 +70,8 @@
       background: #fafbff;
       /* transform: scale(0.9);
       transform-origin: top center; */
-    overflow:auto !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
     }
 
     #heading {
@@ -239,12 +240,7 @@
   background-color: rgba(129, 125, 125,0.9);
 
 }
-.modal {
-  overflow-y:auto;
-}
-.modal-body {
-    word-wrap: break-word;
-}
+
 /* Modal Content (image) */
 .modal-img-content {
   /* max-height: 700px;
@@ -301,9 +297,126 @@ height: 100%;
   text-decoration: none;
   cursor: pointer;
 }
-.setWidth{
-  word-wrap: break-word;
-  max-width: 80px;
+/* Absolute Center Spinner */
+.loading {
+  position: fixed;
+  z-index: 999;
+  height: 2em;
+  width: 2em;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/* Transparent Overlay */
+.loading:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+    background: #fafbff;
+
+  background:#fafbff;
+}
+
+/* :not(:required) hides these rules from IE9 and below */
+.loading:not(:required) {
+  /* hide "loading..." text */
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+
+.loading:not(:required):after {
+  content: '';
+  display: block;
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  margin-top: -0.5em;
+  -webkit-animation: spinner 150ms infinite linear;
+  -moz-animation: spinner 150ms infinite linear;
+  -ms-animation: spinner 150ms infinite linear;
+  -o-animation: spinner 150ms infinite linear;
+  animation: spinner 150ms infinite linear;
+  border-radius: 0.5em;
+  -webkit-box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -1.1em 1.1em 0 0, black -1.5em 0 0 0, black -1.1em -1.1em 0 0, black 0 -1.5em 0 0, black 1.1em -1.1em 0 0;
+box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -1.1em 1.1em 0 0, black -1.5em 0 0 0, black -1.1em -1.1em 0 0, black 0 -1.5em 0 0, black 1.1em -1.1em 0 0;
+}
+
+/* Animation */
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 /* 100% Image Width on Smaller Screens */
@@ -314,6 +427,9 @@ height: 100%;
 } */
   </style>
 <body onload="constructPage()">
+<div id="loading" class="loading">Loading&#8230;
+</div>
+
 <div class="modal fade"
      id="myModal"
      tabindex="-1"
@@ -335,7 +451,6 @@ height: 100%;
                 </button>
             </div>
 
-
             <!-- Modal body with image -->
             <div class="modal-body mt-2 text-center mb-2">
                 <img style="width:70vw !important; max-height:450px" class="modal-img-content" id="img01">
@@ -344,41 +459,7 @@ height: 100%;
         </div>
     </div>
 </div>
-<!-- --------------Extra Text Modal---------------- -->
-<div class="modal"
-     id="trimModal"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="exampleModalLabel2"
-     aria-hidden="true"  data-scroll="false">
-    <div class="modal-dialog modal-xl vertically-centered"
-         role="document">
-        <div class="modal-content" style="width:80vw !important">
-            <!-- Modal heading -->
-            <div class="modal-title mt-3 text-center" ><h2 id="trimModaltitle"></h2></div>
-            <div class="mb-3 float-right">
-                <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        onClick="closeModal('trimModal')"
-                        aria-label="Close">
 
-                        <span style="color:black !important" aria-hidden="true">
-                          ×
-                      </span>
-                </button>
-            </div>
-
-
-            <!-- Modal body with image -->
-            <div class="modal-body mt-2 text-center mb-2" id="trimModalcontent" >
-                <!-- <img style="width:70vw !important; max-height:450px" class="modal-img-content" id="img01"> -->
-            </div>
-
-        </div>
-    </div>
-</div>
-<!-- --------------Extra Text Modal---------------- -->
 
 <div class="container-fluid">
     <!-- <div class="mt-3 text-center">
@@ -433,7 +514,7 @@ height: 100%;
                     class="nav-item ml-auto"
                     style="float: right; display: none"
             >
-                <button
+                <!-- <button
                         class="btn"
                         style="
                     background: white;
@@ -443,7 +524,7 @@ height: 100%;
                         onclick="showFilterCards('show')"
                 >
                     <i class="fa fa-filter"></i> Filters
-                </button>
+                </button> -->
             </li>
         </ul>
     </div>
@@ -487,6 +568,7 @@ height: 100%;
                                     class="form-control search-key"
                                     type="text"
                                     id="name"
+                                    onkeyup="tcNameSearch()"
                                     placeholder="Search by Tc_name"
                                     style="width: 270px"
                             />
@@ -539,6 +621,7 @@ height: 100%;
 
     var obj = '';
     var stepobj = '';
+
 
     console.log(stepobj);
     console.log(obj);
@@ -602,8 +685,8 @@ height: 100%;
 
       var infraTable = getInfraDetailsTable(obj.Suits_Details);
       $("#pills-overview").append(infraTable);
-      var cardDetailsOverview = getCardDetails(obj.Suits_Details.Testcase_Info);
-      var cardDetailsTestcase = getCardDetails(obj.Suits_Details.Testcase_Info);
+      var cardDetailsOverview = getCardDetails(obj.Suits_Details.Testcase_Info,'overview');
+      var cardDetailsTestcase = getCardDetails(obj.Suits_Details.Testcase_Info,'testcase');
 
       $("#pills-overview").append(cardDetailsOverview);
       $("#pills-testcase").append(cardDetailsTestcase);
@@ -635,6 +718,7 @@ height: 100%;
       );
       $("#pills-testcase").append(testcaseDetailsTable);
 
+      $('#loading').hide();
 
     }
 
@@ -658,7 +742,6 @@ height: 100%;
       }
       if (!cols.includes("S.No.")) {
         cols.unshift("S.No.");
-
       }
       // Create a table element
       var table = document.createElement("table");
@@ -705,6 +788,7 @@ height: 100%;
 
             if (cols[j] === "status") {
               // cell.innerHTML = list[i][cols[j]];
+              cell.setAttribute("class", "status");
               var link = document.createElement("div");
               link.className = "btn-sm";
               link.innerHTML = list[i][cols[j]]["value"];
@@ -727,7 +811,6 @@ height: 100%;
               cell.innerHTML = changeTime(list[i][cols[j]]["value"]);
             } else if (cols[j].includes("S.No.")) {
               cell.innerHTML = changeSerial(i)["value"];
-              // cell.style.maxWidth ="20px !important";
             } else if (cols[j].toUpperCase().includes("DURATION")) {
               cell.innerHTML = getDuration(
                 list[i]["start_time"]["value"],
@@ -747,7 +830,12 @@ height: 100%;
                 });
                 cell.appendChild(link);
               }
-            } else {
+            }
+            else if(cols[j].toUpperCase().includes("NAME")) {
+              cell.setAttribute("class","testfilt");
+              cell.innerHTML = list[i][cols[j]]["value"];
+            }
+            else {
               cell.innerHTML = list[i][cols[j]]["value"];
             }
           }
@@ -838,8 +926,7 @@ height: 100%;
         trow.style.backgroundColor = "#FFFFFF";
         for (var j = 0; j < cols.length; j++) {
           var cell = trow.insertCell(-1);
-          cell.setAttribute("class","align-middle setWidth");
-
+          cell.setAttribute("class","align-middle");
           var att = document.createAttribute("data-input");
           if (cols[j].includes(" ")) {
             var v = cols[j].replace(" ", "_");
@@ -907,13 +994,11 @@ cell.appendChild(image);
             cell.innerHTML = convertIntoDateTime(list[i][cols[j]]);
           } else if (cols[j] === "S.No.") {
             cell.innerHTML = i + 1;
-            cell.style.width ="20px";
-
           } else {
             if (list[i][cols[j]] === undefined) {
               list[i][cols[j]] = "-";
             }
-            cell.append(getTrimData(list[i][cols[j]],cols[j]));
+            cell.innerHTML = list[i][cols[j]];
           }
         }
       }
@@ -1145,8 +1230,11 @@ while (n--) {
         }
         cardBody.append(cardTitle).append("<br/>").append(cardText);
         card.append(cardBody);
-
+        card.attr("data-toggle","tooltip");
+        card.attr("data-placement","bottom");
+        card.attr("title","Click to Filter");
         flex.append(card);
+
         card.click(function (event) {
           filterTable(
             event.currentTarget.firstChild.firstChild.innerText,
@@ -1171,7 +1259,6 @@ while (n--) {
             return (
               $(this).filter(function () {
                 var tdText = $(this).find(".statusAccord").text().toLowerCase();
-                console.log(tdText.includes(val.toLowerCase()));
 
                 if (val === "TOTAL") {
                   val = "";
@@ -1190,7 +1277,7 @@ while (n--) {
       }
     }
 
-    function getCardDetails(data) {
+    function getCardDetails(data,type) {
       var key, keys = Object.keys(data);
 var n = keys.length;
 var newobj={}
@@ -1260,8 +1347,20 @@ while (n--) {
           cardText.addClass("othersTest");
         }
         cardBody.append(cardTitle).append("<br/>").append(cardText);
+        // data-toggle="tooltip" data-placement="top" title="Tooltip on top"
+
+
+
         card.append(cardBody);
 
+if(type==='testcase'){
+  card.attr("data-toggle","tooltip");
+        card.attr("data-placement","bottom");
+        card.attr("title","Click to Filter");
+card.click(function(event){
+statusSearch( event.currentTarget.firstChild.firstChild.innerText,event.currentTarget.firstChild.lastChild.innerText);
+});
+}
         flex.append(card);
       }
       div.append(flex);
@@ -1473,36 +1572,38 @@ while (n--) {
     }
 
     var eventList = ["change", "load", "click"];
+
     for (event of eventList) {
       window.addEventListener(event, function () {
-        var $filterableRows = $("#tab").find("tbody").find("tr").not(":first"),
-          $inputs = $(".search-key");
-        $inputs.live("input", function () {
-          getTestcaseDetailsTable(obj.Suits_Details.TestCase_Details);
-          $filterableRows
-            .hide()
-            .filter(function () {
-              return (
-                $(this)
-                  .find("td")
-                  .filter(function () {
-                    var tdText = $(this).text().toLowerCase(),
-                      inputValue = $("#" + $(this).data("input")).val();
+      //   var $filterableRows = $("#tab").find("tbody").find("tr").not(":first"),
+      //     $inputs = $(".search-key");
+      //   $inputs.live("input", function () {
+      //     getTestcaseDetailsTable(obj.Suits_Details.TestCase_Details);
+      //     $filterableRows
+      //       .hide()
+      //       .filter(function () {
+      //         return (
+      //           $(this)
+      //             .find("td")
+      //             .filter(function () {
+      //               var tdText = $(this).text().toLowerCase(),
+      //                 inputValue = $("#" + $(this).data("input")).val();
 
-                    if (inputValue === "All") {
-                      inputValue = "";
-                    }
-                    if (inputValue === undefined) {
-                      inputValue = "";
-                    } else {
-                      inputValue = inputValue.toLowerCase();
-                    }
-                    return tdText.indexOf(inputValue) != -1;
-                  }).length == $(this).find("td").length
-              );
-            })
-            .show();
-        });
+      //               if (inputValue === "All") {
+      //                 inputValue = "";
+      //               }
+      //               if (inputValue === undefined) {
+      //                 inputValue = "";
+      //               } else {
+      //                 inputValue = inputValue.toLowerCase();
+      //               }
+      //               return tdText.indexOf(inputValue) != -1;
+      //             }).length == $(this).find("td").length
+      //         );
+      //       })
+      //       .show();
+      //   });
+
       });
     }
 
@@ -1559,37 +1660,43 @@ while (n--) {
       var date = new Date(value);
       return date.toLocaleString();
     }
-    function closeModal(id){
-      var modal = document.getElementById(id);
+    function closeImage(){
+      var modal = document.getElementById("myModal");
       modal.style.display = "none";
 
     }
-    function getTrimData(data,column){
-console.log("column",column);
-      var div = document.createElement("div");
-      var span = document.createElement("span");
-      var button=document.createElement("button");
-      button.innerHTML = "See More";
-      button.addEventListener("click", function(){
-var trimModal= document.getElementById("trimModal");
-trimModal.style.display="block";
-var trimModalcontent=document.getElementById("trimModalcontent");
-trimModalcontent.innerHTML=data;
-var trimModaltitle=document.getElementById("trimModaltitle");
-trimModaltitle.innerHTML= column.toUpperCase();
-trimModal.style.backgroundColor="rgba(0, 0, 0, 0.5)";
 
-      });
-      button.setAttribute("class","ml-2 btn btn-link");
-      if(data.length>150){
-      span.innerHTML = data.slice(0,150) + "...";
-      span.appendChild(button);
-      }else{
-        span.innerHTML = data;
-      }
-      div.appendChild(span);
 
-return div;
+    function statusSearch(val,count){
+      if(count>0){
+       var $filterableRows = $("#tab")
+          .find("tbody")
+          .find(".checkCollapse")
+
+        $filterableRows
+          .hide()
+          .filter(function () {
+            return (
+              $(this).filter(function () {
+                var tdText = $(this).find(".status").text().toLowerCase();
+                console.log(tdText);
+
+
+                if (val === "TOTAL") {
+                  val = "";
+                }
+                if (val === undefined) {
+                  val = "";
+                } else {
+                  val = val.toLowerCase();
+                }
+
+                return tdText.includes(val);
+              }).length === $(this).length
+            );
+          })
+          .show();
+        }
     }
 
   </script>
