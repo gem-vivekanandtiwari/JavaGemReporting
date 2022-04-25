@@ -49,7 +49,7 @@ public class GemTestReporter {
     public static void addTestStep(String stepTitle, String stepDescription, STATUS status, String screenShotPath) {
         Map<String, String> scrnshot = new HashMap<String, String>();
 //		scrnshot.put("ScreenShot", "data:image/gif;base64, "+screenShotPath);
-    	scrnshot.put("ScreenShot", screenShotPath);
+    	scrnshot.put("ScreenShot", "file://"+screenShotPath);
 
         addTestStep(stepTitle, stepDescription, status, scrnshot);
     }
@@ -145,13 +145,26 @@ public class GemTestReporter {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         //String suiteDetail = gson.toJson(reporting, QuartzReporting.class);
         JsonElement suiteDetail = gson.toJsonTree(reporting);
-        System.out.println(suiteDetail.toString());
-        System.out.println(stepJson.toString());
+        System.out.println("SuitDetails "+ suiteDetail.toString());
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("testCaseDetails"+stepJson.toString());
         try {
             GemReportingUtility.createReport(suiteDetail.toString(), stepJson.toString());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public static   JsonElement getSuiteDetails(){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonElement suiteDetail = gson.toJsonTree(reporting);
+        return suiteDetail;
+    }
+
+    public static String getTestStepDetails(){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String testStepJson = stepJson.toString();
+        return testStepJson;
     }
 }

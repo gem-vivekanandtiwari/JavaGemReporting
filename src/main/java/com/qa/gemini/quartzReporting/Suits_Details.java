@@ -76,14 +76,25 @@ class Suits_Details {
 		}
 
 		this.Testcase_Info = new Testcase_Info();
-		this.Testcase_Info.setEXE(exe);
+		if(exe>0) {
+			this.Testcase_Info.setEXE(exe);
+		}
+
 		this.Testcase_Info.setFAIL(fail);
-		this.Testcase_Info.setINCOMPLETE(incomplete);
-		this.Testcase_Info.setINFO(info);
+		if(incomplete>0) {
+			this.Testcase_Info.setINCOMPLETE(incomplete);
+		}
+		if(info>0) {
+			this.Testcase_Info.setINFO(info);
+		}
 		this.Testcase_Info.setPASS(pass);
-		this.Testcase_Info.setREQ(req);
+		if(req>0) {
+			this.Testcase_Info.setREQ(req);
+		}
 		this.Testcase_Info.setTOTAL(total);
-		this.Testcase_Info.setWARN(warn);
+		if(warn>0) {
+			this.Testcase_Info.setWARN(warn);
+		}
 	}
 
 
