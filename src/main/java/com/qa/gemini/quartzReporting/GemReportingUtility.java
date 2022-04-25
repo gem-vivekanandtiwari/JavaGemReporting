@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.charset.Charset;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -19,8 +22,16 @@ public class GemReportingUtility {
 		String htmlTemplate = IOUtils.toString(ClassLoader.getSystemResourceAsStream("QuanticReport.html"), Charset.defaultCharset());
 		htmlTemplate = htmlTemplate.replace("var obj = '';","var obj = "+suiteDetail+";");
 		htmlTemplate = htmlTemplate.replace("var stepobj = '';", "var stepobj = "+stepJson+";");
+		//ddmmyy
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyyyy");
+		//hms
+		DateTimeFormatter hms = DateTimeFormatter.ofPattern("HHmmss");
+		//ddmmyyyyhhmmss
+		DateTimeFormatter dmyhms = DateTimeFormatter.ofPattern("ddmmyyyyHHmmss");
+
 		if(loc == null) {
-			FileUtils.writeStringToFile(new File("Report/GemEcoTestReport.html"), htmlTemplate, Charset.defaultCharset());
+			FileUtils.writeStringToFile(new File("Report/"+dtf.format(now)+"/"+"GemEcoTestReport_"+dmyhms.format(now)+".html"), htmlTemplate, Charset.defaultCharset());
 		}
 		else{
 			FileUtils.writeStringToFile(new File(loc+"/GemEcoTestReport.html"), htmlTemplate, Charset.defaultCharset());
