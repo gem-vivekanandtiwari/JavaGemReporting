@@ -21,7 +21,7 @@ public class GemReportingUtility {
 //		String htmlTemplate = FileUtils.readFileToString(new File(ClassLoader.getSystemResource("QuanticReport.html").getFile()), Charset.defaultCharset());
 		String htmlTemplate = IOUtils.toString(ClassLoader.getSystemResourceAsStream("QuanticReport.html"), Charset.defaultCharset());
 		htmlTemplate = htmlTemplate.replace("var obj = '';","var obj = "+suiteDetail+";");
-		htmlTemplate = htmlTemplate.replace("var stepobj = '';", "var stepobj = "+stepJson+";");
+//		htmlTemplate = htmlTemplate.replace("var stepobj = '';", "var stepobj = "+stepJson+";");
 		//ddmmyy
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyyyy");

@@ -145,9 +145,10 @@ public class GemTestReporter {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         //String suiteDetail = gson.toJson(reporting, QuartzReporting.class);
         JsonElement suiteDetail = gson.toJsonTree(reporting);
+        suiteDetail.getAsJsonObject().add("TestStep_Details",stepJson);
         System.out.println("SuitDetails "+ suiteDetail.toString());
-        System.out.println("----------------------------------------------------------------");
-        System.out.println("testCaseDetails"+stepJson.toString());
+//        System.out.println("----------------------------------------------------------------");
+//        System.out.println("testCaseDetails"+stepJson.toString());
         try {
             GemReportingUtility.createReport(suiteDetail.toString(), stepJson.toString());
         } catch (IOException e) {

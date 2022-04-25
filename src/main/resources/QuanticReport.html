@@ -1,10 +1,9 @@
-<!--Version 1.0.1-->
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -37,8 +36,8 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap"
             rel="stylesheet"
@@ -48,12 +47,18 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js" integrity="sha512-Y2IiVZeaBwXG1wSV7f13plqlmFOx8MdjuHyYFVoYzhyRr3nH/NMDjTBSswijzADdNzMyWNetbLMfOpIPl6Cv9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"
+            integrity="sha512-Y2IiVZeaBwXG1wSV7f13plqlmFOx8MdjuHyYFVoYzhyRr3nH/NMDjTBSswijzADdNzMyWNetbLMfOpIPl6Cv9g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" integrity="sha512-Velp0ebMKjcd9RiCoaHhLXkR1sFoCCWXNp6w4zj1hfMifYB5441C+sKeBl/T/Ka6NjBiRfBBQRaQq65ekYz3UQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css"
+          integrity="sha512-Velp0ebMKjcd9RiCoaHhLXkR1sFoCCWXNp6w4zj1hfMifYB5441C+sKeBl/T/Ka6NjBiRfBBQRaQq65ekYz3UQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.js" integrity="sha512-YibiFIKqwi6sZFfPm5HNHQYemJwFbyyYHjrr3UT+VobMt/YBo1kBxgui5RWc4C3B4RJMYCdCAJkbXHt+irKfSA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.js"
+            integrity="sha512-YibiFIKqwi6sZFfPm5HNHQYemJwFbyyYHjrr3UT+VobMt/YBo1kBxgui5RWc4C3B4RJMYCdCAJkbXHt+irKfSA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <style>
   .thumb {
@@ -426,7 +431,9 @@ box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -
     width: 100%;
   }
 } */
-  </style>
+
+
+</style>
 <body onload="constructPage()">
 <div id="loading" class="loading">Loading&#8230;
 </div>
@@ -436,7 +443,7 @@ box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -
      tabindex="-1"
      role="dialog"
      aria-labelledby="exampleModalLabel"
-     aria-hidden="true"  data-scroll="false">
+     aria-hidden="true" data-scroll="false">
     <div class="modal-dialog modal-xl vertically-centered"
          role="document">
         <div class="modal-content" style="width:80vw !important">
@@ -470,7 +477,6 @@ box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -
            <div id="caption"></div>
          </div>
         <div> -->
-
 
 
     <h4 class="my-4" id="heading">
@@ -621,9 +627,7 @@ box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -
     };
 
     var obj = '';
-    var stepobj = '';
 
-    console.log(stepobj);
     console.log(obj);
     if (obj.reportProduct === "PYGEM") {
       theme = pygemThemes;
@@ -772,14 +776,11 @@ box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -
 
           trow.setAttribute("data-toggle", "collapse");
           trow.setAttribute("data-target", "#accord" + i);
-
           trow.className = "checkCollapse";
           trow.style.background = "white";
           for (var j = 0; j < cols.length; j++) {
             var cell = trow.insertCell(-1);
-            cell.addEventListener("click",function(){
-              $("#tab").find("tbody").find("tr").not(".accordRow").not(".checkCollapse").not(":first").fadeIn("fast");
-          });
+
             var att = document.createAttribute("data-input");
             if (cols[j].includes(" ")) {
               var v = cols[j].replace(" ", "_");
@@ -839,11 +840,7 @@ box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -
               cell.innerHTML = list[i][cols[j]]["value"];
             }
             else {
-              if (!list[i][cols[j]]) {
-                cell.innerHTML = "None";
-              } else{
               cell.innerHTML = list[i][cols[j]]["value"];
-              }
             }
           }
         }
@@ -865,17 +862,17 @@ box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -
           .css("color", theme[0]);
         accordDiv.append(accordHeading[0]);
         var stepCard = createAccordionCards(
-          stepobj[list[i]["tc_run_id"]["value"]].metaData[2],
+          obj.TestStep_Details[list[i]["tc_run_id"]["value"]].metaData[2],
           i
         );
         stepCard.addClass("mt-4");
         accordDiv.append(stepCard[0]);
         var stepDetails = createAccordionMetaDetails(
-          stepobj[list[i]["tc_run_id"]["value"]].metaData
+          obj.TestStep_Details[list[i]["tc_run_id"]["value"]].metaData
         );
         accordDiv.append(stepDetails[0]);
         var tableAccord = createAccordionTable(
-          stepobj[list[i]["tc_run_id"]["value"]].steps,
+          obj.TestStep_Details[list[i]["tc_run_id"]["value"]].steps,
           i
         );
         accordDiv.append(tableAccord[0]);
@@ -929,7 +926,7 @@ box-shadow: black 1.5em 0 0 0, black 1.1em 1.1em 0 0, black 0 1.5em 0 0, black -
       for (var i = 0; i < list.length; i++) {
         // Create a new row
         trow = table.insertRow(-1);
-        trow.className = "accordRow";
+
         trow.style.backgroundColor = "#FFFFFF";
         for (var j = 0; j < cols.length; j++) {
           var cell = trow.insertCell(-1);
@@ -1084,9 +1081,7 @@ cell.appendChild(image);
       );
       for (var m = 0; m < data.length - 1; m++) {
         var headers = $("<tr>");
-          headers.addClass("accordRow");
         var content = $("<tr/>");
-        content.addClass("accordRow");
         var cols = Headers(data[m]);
         for (var colIndex = 0; colIndex < cols.length; colIndex++) {
           var val = data[m][cols[colIndex]];
@@ -1367,9 +1362,6 @@ if(type==='testcase'){
         card.attr("data-placement","bottom");
         card.attr("title","Click to Filter");
 card.click(function(event){
-
-$("#tab").find("tbody").find("tr").not(".accordRow").not(".checkCollapse").not(":first").fadeOut("fast");
-
 statusSearch( event.currentTarget.firstChild.firstChild.innerText,event.currentTarget.firstChild.lastChild.innerText);
 });
 }
@@ -1711,5 +1703,7 @@ statusSearch( event.currentTarget.firstChild.firstChild.innerText,event.currentT
         }
     }
 
-  </script>
+
+
+</script>
 </html>
