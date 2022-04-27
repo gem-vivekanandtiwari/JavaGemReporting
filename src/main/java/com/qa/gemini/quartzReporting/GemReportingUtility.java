@@ -28,7 +28,7 @@ public class GemReportingUtility {
 		//hms
 		DateTimeFormatter hms = DateTimeFormatter.ofPattern("HHmmss");
 		//ddmmyyyyhhmmss
-		DateTimeFormatter dmyhms = DateTimeFormatter.ofPattern("ddmmyyyyHHmmss");
+		DateTimeFormatter dmyhms = DateTimeFormatter.ofPattern("ddMMyyyyHHmmss");
 
 		if(loc == null) {
 			FileUtils.writeStringToFile(new File("Report/"+dtf.format(now)+"/"+"GemEcoTestReport_"+dmyhms.format(now)+".html"), htmlTemplate, Charset.defaultCharset());

@@ -79,7 +79,6 @@ class Suits_Details {
 		if(exe>0) {
 			this.Testcase_Info.setEXE(exe);
 		}
-
 		this.Testcase_Info.setFAIL(fail);
 		if(incomplete>0) {
 			this.Testcase_Info.setINCOMPLETE(incomplete);
